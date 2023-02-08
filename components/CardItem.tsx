@@ -7,8 +7,9 @@ export default function CardItem(
         title,
         short,
         text,
+        href,
         src
-    }: { title: string, short: string, text: string, src: string }) {
+    }: { title: string, short: string, text: string, href: string, src: string }) {
 
     return (
         <div className="mt-4">
@@ -20,7 +21,7 @@ export default function CardItem(
                                alt={title}/>
                     </div>
                     <div style={{maxWidth: 460}}>
-                        <a href={"https://reactjs.org/"} target={"_blank"} rel={"noreferrer"}
+                        <a href={href} target={"_blank"} rel={"noreferrer"}
                            className="uppercase tracking-wide text-sm text-indigo-500 font-semi-bold">
                             {title}
                         </a>
