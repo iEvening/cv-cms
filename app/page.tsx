@@ -86,7 +86,7 @@ export default function Home() {
         {
             id: "T7",
             title: "React-Toastify",
-            short: "React toast library",
+            short: "A React toast library",
             text: "React-Toastify allows you to add notifications to your app with ease. No more nonsense!",
             href: "https://github.com/fkhadra/react-toastify",
             src: Toast_img
