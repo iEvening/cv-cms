@@ -15,6 +15,7 @@ import ReactQ_img from "public/images/react-q.svg";
 import Prisma_img from "public/images/prisma.svg";
 import CustomIcon from "@/components/CustomIcon";
 import Vercel_img from "public/vercel.svg";
+import Auth_img from "public/images/auth.png";
 import CardItem from "@/components/CardItem";
 
 const inter = Inter({subsets: ['latin']})
@@ -58,7 +59,14 @@ export default function Home() {
             src: Prisma_img
         },
         {
-            id: "V5",
+            id: "N5",
+            title: "NextAuth",
+            short: "Open Source. Full Stack. Own Your Data.",
+            text: "NextAuth.js is a complete open source authentication solution for Next.js applications.",
+            src: Auth_img
+        },
+        {
+            id: "V6",
             title: "Vercel",
             short: "Develop.Preview.Ship.",
             text: "Vercel is the platform for frontend developers, providing the speed and reliability innovators need to create at the moment of inspiration.",
