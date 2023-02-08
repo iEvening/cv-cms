@@ -16,6 +16,10 @@ import Prisma_img from "public/images/prisma.svg";
 import CustomIcon from "@/components/CustomIcon";
 import Vercel_img from "public/vercel.svg";
 import Auth_img from "public/images/auth.png";
+import Forms_img from "public/images/Forms.svg";
+import Toast_img from "public/images/toast.png";
+import Quill_img from "public/images/quill.svg";
+
 import CardItem from "@/components/CardItem";
 
 const inter = Inter({subsets: ['latin']})
@@ -28,6 +32,7 @@ export default function Home() {
             title: "React + TypeScript",
             short: "A JavaScript library for building user interfaces",
             text: "Build encapsulated components that manage their own state, then compose them to make complex UIs.",
+            href: "https://reactjs.org/",
             src: React_img
         },
         {
@@ -35,6 +40,7 @@ export default function Home() {
             title: "Next.js",
             short: "The React Framework for the Web",
             text: "Used by some of the worlds largest companies, Next.js enables you to create full-stack web applications by extending the latest React features, and integrating powerful Rust-based JavaScript tooling for the fastest builds.",
+            href:"https://nextjs.org/",
             src: Next_img
         },
         {
@@ -42,6 +48,7 @@ export default function Home() {
             title: "Tailwind CSS",
             short: "Rapidly build modern websites without ever leaving your HTML",
             text: "A utility-first CSS framework packed with classes like flex, pt-4, text-center and rotate-90 that can be composed to build any design, directly in your markup.",
+            href: "https://tailwindcss.com/",
             src: Tailwind_img
         },
         {
@@ -49,6 +56,7 @@ export default function Home() {
             title: "React Query",
             short: "Performant and powerful data synchronization for React",
             text: "Fetch, cache and update data in your React and React Native applications all without touching any global state.",
+            href: "https://react-query-v3.tanstack.com/",
             src: ReactQ_img
         },
         {
@@ -56,6 +64,7 @@ export default function Home() {
             title: "Prisma",
             short: "Next-generation Node.js and TypeScript ORM",
             text: "Prisma unlocks a new level of developer experience when working with databases thanks to its intuitive data model, automated migrations, type-safety & auto-completion.",
+            href: "https://www.prisma.io/",
             src: Prisma_img
         },
         {
@@ -63,13 +72,39 @@ export default function Home() {
             title: "NextAuth",
             short: "Open Source. Full Stack. Own Your Data.",
             text: "NextAuth.js is a complete open source authentication solution for Next.js applications.",
+            href: "https://next-auth.js.org/",
             src: Auth_img
         },
         {
-            id: "V6",
+            id: "H6",
+            title: "React Hook Form",
+            short: "Validate your forms with ease.",
+            text: "Performant, flexible and extensible forms with easy-to-use validation.",
+            href: "https://react-hook-form.com/",
+            src: Forms_img
+        },
+        {
+            id: "T7",
+            title: "React-Toastify",
+            short: "React toast library",
+            text: "React-Toastify allows you to add notifications to your app with ease. No more nonsense!",
+            href: "https://github.com/fkhadra/react-toastify",
+            src: Toast_img
+        },
+        {
+            id: "Q8",
+            title: "Quill",
+            short: "Your powerful, rich text editor",
+            text: "QuillJS is a modern rich text editor built for compatibility and extensibility. It was created by Jason Chen and Byron Milligan and open sourced by Salesforce.",
+            href: "https://github.com/zenoamaro/react-quill",
+            src: Quill_img
+        },
+        {
+            id: "V9",
             title: "Vercel",
             short: "Develop.Preview.Ship.",
             text: "Vercel is the platform for frontend developers, providing the speed and reliability innovators need to create at the moment of inspiration.",
+            href: "https://vercel.com/",
             src: Vercel_img
         },
         /*        {
@@ -104,7 +139,7 @@ export default function Home() {
                         {data.map((elem, i) => (
                             <React.Fragment key={elem.id + "_" + i}>
                                 <CardItem title={elem.title} short={elem.short} text={elem.text}
-                                          src={elem.src}/>
+                                          href={elem.href} src={elem.src}/>
                                 {/*                            {(i < max) && <CustomIcon name={"plus"} fill={"bg-slate-800"}/>}*/}
                             </React.Fragment>
                         ))}
