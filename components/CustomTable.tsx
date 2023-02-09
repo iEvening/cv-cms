@@ -80,7 +80,7 @@ export default function CustomTable<T>({open, headers, data, actions, children}
         <div className={"flex justify-center flex-wrap overflow-x-auto pt-4"}>
             {(open.modalData.type === "add" || open.modalData.type === "edit") && (
                 <div
-                    className={"grid w-full mb-4 sm:w-4/5 md:w-3/5 lg:w-1/4 lg:mr-4 lg:mb-0 lg:max-w-max overflow-x-scroll bg-white rounded p-2 h-fit shadow"}>
+                    className={"grid w-full mb-4 sm:w-4/5 md:w-3/5 lg:w-1/4 lg:mr-4 lg:mb-0 lg:max-w-max overflow-x-auto bg-white rounded p-2 h-fit shadow"}>
                     <div className={"flex flex-col"}>
                         <>
                             {children}
@@ -89,7 +89,7 @@ export default function CustomTable<T>({open, headers, data, actions, children}
                 </div>
             )}
 
-            <div className={"grid pb-4 overflow-x-scroll max-w-full rounded"}>
+            <div className={"grid pb-4 overflow-x-auto max-w-full rounded"}>
                 <table className="justify-self-center h-fit border-collapse shadow">
                     <thead className="bg-slate-400 border-b border-slate-200">
                     <tr>
