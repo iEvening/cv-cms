@@ -4,7 +4,7 @@ import {getServerSession} from "next-auth/next";
 import {authOptions} from "@/pages/api/auth/[...nextauth]";
 import {prisma} from "@/lib/prisma";
 
-export default async (req: NextApiRequest, res: NextApiResponse<IMenu>) => {
+export default async function handler(req: NextApiRequest, res: NextApiResponse<IMenu>) {
 
     if (req.method !== 'GET') {
         return res.status(401).json({error: {type: "forbidden", message: "not allowed!"}});

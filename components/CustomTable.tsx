@@ -13,7 +13,7 @@ type TTableOpen<T> = {
 }
 
 export default function CustomTable<T>({open, headers, data, actions, children}
-                                        : { open: TTableOpen<T>, headers: String[], data: any[], actions: Map<string, TTableAction>, children?: JSX.Element }) {
+                                        : { open: TTableOpen<T>, headers: String[], data?: any[], actions: Map<string, TTableAction>, children?: JSX.Element }) {
 
     const tableHeaderContent = headers.map((elem, ind) => {
         const capitalizedTitle = elem.charAt(0).toUpperCase() + elem.substring(1);

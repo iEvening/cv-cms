@@ -1,4 +1,4 @@
-import {Contents, Menu} from "@/data/Types";
+import {TContents, TMenu} from "@/data/Types";
 
 export interface IResponse {
     error?: {
@@ -8,9 +8,9 @@ export interface IResponse {
 }
 
 export interface IContents extends IResponse {
-    pages?: Contents[]
+    pages?: TContents[]
 }
 
 export interface IMenu extends IResponse {
-    menu?: Menu[]
+    menu?: TMenu[]
 }
