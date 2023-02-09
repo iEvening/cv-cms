@@ -77,7 +77,7 @@ export default function CustomTable<T>({open, headers, data, actions, children}
 
 
     return (
-        <div className={"flex justify-center flex-wrap overflow-x-scroll pt-4"}>
+        <div className={"flex justify-center flex-wrap overflow-x-auto pt-4"}>
             {(open.modalData.type === "add" || open.modalData.type === "edit") && (
                 <div
                     className={"grid w-full mb-4 sm:w-4/5 md:w-3/5 lg:w-1/4 lg:mr-4 lg:mb-0 lg:max-w-max overflow-x-scroll bg-white rounded p-2 h-fit shadow"}>
