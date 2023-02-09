@@ -4,7 +4,7 @@ import MainContainer from "@/components/MainContainer";
 import Spinner from "@/components/Spinner";
 
 import {IContents} from "@/data/Interfaces";
-import {useQueries, useQuery, useQueryClient} from "@tanstack/react-query";
+import {useQuery, useQueryClient} from "@tanstack/react-query";
 import load from "@/lib/load";
 import {toast} from "react-toastify";
 import React, {useState} from "react";
