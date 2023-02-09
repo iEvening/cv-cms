@@ -22,11 +22,11 @@ export default function CardItem(
                     </div>
                     <div style={{maxWidth: 460}}>
                         <a href={href} target={"_blank"} rel={"noreferrer"}
-                           className="uppercase tracking-wide text-sm text-indigo-500 font-semi-bold">
+                           className="uppercase tracking-wide text-sm text-indigo-500 font-semi-bold hover:underline">
                             {title}
                         </a>
                         <div
-                            className="block mt-1 text-lg leading-tight font-medium text-black hover:underline">
+                            className="block mt-1 text-lg leading-tight font-medium text-black">
                             {short}
                         </div>
                         <p className="mt-2 text-slate-500">{text}</p>
