@@ -1,4 +1,4 @@
-export type Contents = {
+export type TContents = {
     id: string
     name: string
     title: string
@@ -7,7 +7,7 @@ export type Contents = {
     createdAt: Date
 }
 
-export type Menu = {
+export type TMenu = {
     id: string
     name: string
     title: string

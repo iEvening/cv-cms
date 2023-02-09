@@ -1,24 +1,21 @@
 'use client';
 
-import Image from 'next/image'
 import {Inter} from '@next/font/google'
-import styles from './page.module.css'
 import React from "react";
 import MainContainer from "@/components/MainContainer";
 
 
 import React_img from "public/images/react.svg";
-import Pwa_img from "public/images/pwa.png";
 import Next_img from "public/images/nextjs.png";
 import Tailwind_img from "public/images/tailwind.png";
 import ReactQ_img from "public/images/react-q.svg";
 import Prisma_img from "public/images/prisma.svg";
-import CustomIcon from "@/components/CustomIcon";
 import Vercel_img from "public/vercel.svg";
 import Auth_img from "public/images/auth.png";
 import Forms_img from "public/images/Forms.svg";
 import Toast_img from "public/images/toast.png";
 import Quill_img from "public/images/quill.svg";
+import Analytics_img from "public/images/analytics.png";
 
 import CardItem from "@/components/CardItem";
 
@@ -86,7 +83,7 @@ export default function Home() {
         {
             id: "T7",
             title: "React-Toastify",
-            short: "React toast library",
+            short: "A React toast library",
             text: "React-Toastify allows you to add notifications to your app with ease. No more nonsense!",
             href: "https://github.com/fkhadra/react-toastify",
             src: Toast_img
@@ -106,6 +103,14 @@ export default function Home() {
             text: "Vercel is the platform for frontend developers, providing the speed and reliability innovators need to create at the moment of inspiration.",
             href: "https://vercel.com/",
             src: Vercel_img
+        },
+        {
+            id: "A10",
+            title: "Vercel/analytics",
+            short: "Better insights. Peak performance.",
+            text: "Upgrade your post-launch workflow with actionable insights, then experiment until you reach peak conversion rates.",
+            href: "https://vercel.com/analytics",
+            src: Analytics_img
         },
         /*        {
                     id: "P6",

@@ -3,76 +3,58 @@
 import React, {useState} from "react";
 import Link from "next/link";
 import {signIn, signOut, useSession} from "next-auth/react";
-import load from "@/lib/load";
 import {useQuery} from "@tanstack/react-query";
 import SmallSpinner from "@/components/SmallSpinner";
-import {IMenu} from "@/data/Interfaces";
-import Spinner from "@/components/Spinner";
+import {TMenu} from "@/data/Types";
+import {getSecureMenuContent} from "@/lib/handlers/apiHandlers";
 
 
-export default function Menu({content}: { content?: JSX.Element }) {
+export default function Menu() {
 
-    const {data: session, status} = useSession();
-    /*    console.log({session});*/
+    const session = useSession();
 
     const [menuOpen, setMenuOpen] = useState(false);
-    /*    const [modalOpen, setModalOpen] = useState(false);*/
 
     const handleMenuOpen = () => {
         setMenuOpen((prev) => !prev);
     }
 
-    const getSecureMenuContent = async () => {
-/*        console.log("SECURE_MENU_LOADING")*/
-        return await load({url: "/api/menu", options: {method: "GET"}});
-    }
-
-    function SecureMenuContent(data?: IMenu) {
-        return (
-            <>
-                {session?.user && (
-                    <Link href="/admin/contents">
-                        Content Manager
-                    </Link>
-                )}
-                {data?.menu?.map((elem) => (
-                    <li key={elem.id} className={"hover:text-emerald-400 active:text-emerald-800"}>
-                        <Link href={`admin/contents/${elem.name === "manager" ? "" : elem.name}`}>
-                            {elem.title}
-                        </Link>
-                    </li>
-                ))}
-            </>
-        )
-    }
-
-
-    /*    const handleLoginModalOpen = () => {
-            setModalOpen((prev) => !prev);
-        }*/
-
-    /*    function handleLoginModalClose() {
-            setModalOpen(false);
-        }*/
-
 
     const {
         isLoading,
-        isError,
-        data,
-        error,
+        isFetched,
+        isPaused,
+        isStale,
+        isFetchedAfterMount,
         isFetching,
-    }: { isLoading: boolean, isError: any, data: any, error: any, isFetching: any } = useQuery({
+        data,
+        isInitialLoading
+    }: { isLoading: boolean, data: any, isInitialLoading: boolean, isFetched: boolean, isPaused: boolean, isStale: boolean, isFetchedAfterMount: boolean, isFetching: boolean } = useQuery({
         queryKey: ['menu'],
         queryFn: getSecureMenuContent,
-        enabled: (status === "authenticated"),
-        retry: 0
+        enabled: (!!session && session.status === "authenticated"),
+        retry: 0,
     })
 
 
-    /*    if (isLoading) {
-            return (<Spinner/>);
-        }*/
+    const SecureMenuContent = data?.menu?.map((elem: TMenu) => (
+        <li key={elem.id} className={"hover:text-emerald-400 active:text-emerald-800"}>
+            <Link href={`admin/contents/${elem.name === "manager" ? "" : elem.name}`}>
+                {elem.title}
+            </Link>
+        </li>
+    ));
+
+    /*        console.log(
+                {isLoading},
+                {isFetched},
+                {isPaused},
+                {isStale},
+                {isFetchedAfterMount},
+                {isFetching},
+                {isInitialLoading},
+                {session}
+            )*/
 
     return (
         <>
@@ -81,7 +63,7 @@ export default function Menu({content}: { content?: JSX.Element }) {
                 <div className="max-w-8xl mx-auto">
                     <div className="py-4 lg:px-8 lg:border-0 mx-4 lg:mx-0 flex justify-between" style={{minHeight: 72}}>
 
-                        {(isLoading && status !== "unauthenticated")
+                        {(isInitialLoading)
                             ? (<SmallSpinner/>)
                             : (
                                 <>
@@ -96,17 +78,27 @@ export default function Menu({content}: { content?: JSX.Element }) {
                                             className="text-sm leading-6 font-semi-bold text-slate-100">
 
                                             <ul className={`${menuOpen ? "space-y-3 md:flex md:space-y-0 md:space-x-8" : "flex space-x-8"}  text-base font-medium`}>
-                                                <li className="hover:text-emerald-200 hover:text-emerald-400 active:text-emerald-800">
-                                                    <Link href="/">
-                                                        Home
-                                                    </Link>
+                                                <>
+                                                    <li className="hover:text-emerald-200 hover:text-emerald-400 active:text-emerald-800">
+                                                        <Link href="/">
+                                                            Home
+                                                        </Link>
 
-                                                </li>
+                                                    </li>
 
-                                                {(!data?.error)
-                                                    ? SecureMenuContent(data)
-                                                    : null}
-                                                {content}
+                                                    <>
+                                                        {session.status === "authenticated" && (
+                                                            <>
+                                                                <li className={"hover:text-emerald-400 active:text-emerald-800"}>
+                                                                    <Link href="/admin/contents">
+                                                                        Content Manager
+                                                                    </Link>
+                                                                </li>
+                                                                {SecureMenuContent}
+                                                            </>
+                                                        )}
+                                                    </>
+                                                </>
                                             </ul>
                                         </nav>
                                     </div>
@@ -117,9 +109,9 @@ export default function Menu({content}: { content?: JSX.Element }) {
                                                 className="text-sm leading-6 font-semi-bold text-slate-100">
 
 
-                                                {session?.user ? (
+                                                {session.status === "authenticated" ? (
                                                     <div className={"flex flex-wrap"}>
-                                                        <p className="text-slate-200 self-center pr-4 pl-4 text-xl font-medium cursor-pointer hover:text-emerald-400 active:text-emerald-800"> {session.user.name}</p>
+                                                        <p className="text-slate-200 self-center pr-4 pl-4 text-xl font-medium cursor-pointer hover:text-emerald-400 active:text-emerald-800">{session?.data?.user?.name}</p>
                                                         <button type="button"
                                                                 className="text-white bg-red-500 hover:bg-red-800 font-medium rounded-full text-sm px-5 py-2.5 mr-2"
                                                                 onClick={() => signOut()}>
