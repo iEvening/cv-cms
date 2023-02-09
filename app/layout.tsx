@@ -4,7 +4,7 @@ import React from "react";
 import Providers from "@/app/providers";
 
 import Background_img from "@/public/images/bg-mj_hres.png";
-import Menu from "@/components/Menu";
+import {AnalyticsWrapper} from "@/components/analytics";
 
 export default function RootLayout({children}: {
     children: React.ReactNode
@@ -22,7 +22,9 @@ export default function RootLayout({children}: {
 
         <Providers>
             {children}
+            <AnalyticsWrapper />
         </Providers>
+
 
         </body>
         </html>
