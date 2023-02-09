@@ -4,32 +4,31 @@ import MainContainer from "@/components/MainContainer";
 import Spinner from "@/components/Spinner";
 
 import {IContents} from "@/data/Interfaces";
-import {useQuery} from "@tanstack/react-query";
+import {useQueries, useQuery, useQueryClient} from "@tanstack/react-query";
 import load from "@/lib/load";
 import {toast} from "react-toastify";
-import React, {Suspense, useMemo, useState} from "react";
+import React, {useState} from "react";
 import CustomTable from "@/components/CustomTable";
-import {Contents, TContentForm, TTableAction, TTableModal} from "@/data/Types";
+import {TContents, TContentForm, TTableAction, TTableModal} from "@/data/Types";
 import CustomModal from "@/components/CustomModal";
-import {Controller, useForm} from "react-hook-form";
-import ReactQuill from "react-quill";
-import dynamic from "next/dynamic";
+import {useForm} from "react-hook-form";
 import CustomForm from "@/components/CustomForm";
 import QuillEditor from "@/components/QuillEditor";
-
+import {useSession} from "next-auth/react";
 
 export default function ContentsPage() {
 
-    /*    const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });*/
+    const queryClient = useQueryClient();
 
-    const [modalOpen, setModalOpen] = useState<TTableModal<Contents>>({type: ""});
+    const session = useSession();
+
+    const [modalOpen, setModalOpen] = useState<TTableModal<TContents>>({type: ""});
 
     const {
         register,
         handleSubmit,
         setValue,
         resetField,
-        watch,
         formState: {errors},
         control
     } = useForm<TContentForm>();
@@ -43,8 +42,7 @@ export default function ContentsPage() {
                 toast.success("Page added!");
                 handleModalClose();
 
-                refetch();
-                /*return res.pages;*/
+                await queryClient.refetchQueries();
             }
 
         } else {
@@ -65,8 +63,8 @@ export default function ContentsPage() {
             if (!res.error) {
                 toast.success("Page modified!");
                 handleModalClose();
-                refetch();
-                /*return res.pages;*/
+
+                await queryClient.refetchQueries();
             }
 
         } else {
@@ -85,8 +83,8 @@ export default function ContentsPage() {
             if (!res.error) {
                 toast.success("Page deleted!");
                 handleModalClose();
-                refetch();
-                /*return res.pages;*/
+
+                await queryClient.refetchQueries();
             }
         } else {
             toast.error("No ID specified! (website-error)")
@@ -94,9 +92,10 @@ export default function ContentsPage() {
     }
 
 
-    const getContents = async () => {
+    const getContentsData = async () => {
         return await load({url: '/api/contents', options: {method: "GET"}});
     }
+
 
     function getTableActions(): Map<string, TTableAction> {
         const TAdd = {key: "add", show: false, handler: handlePageAddOpen};
@@ -111,13 +110,13 @@ export default function ContentsPage() {
         setModalOpen({type: "add"});
     }
 
-    const handlePageEditOpen = (elem: Contents) => {
+    const handlePageEditOpen = (elem: TContents) => {
         clearValues();
         setEditValues(elem);
         setModalOpen({type: "edit", data: elem});
     }
 
-    const handlePageDeleteOpen = (elem: Contents) => {
+    const handlePageDeleteOpen = (elem: TContents) => {
         setModalOpen({type: "delete", data: elem});
     }
 
@@ -126,116 +125,115 @@ export default function ContentsPage() {
         setModalOpen({type: ""});
     }
 
-    function setEditValues(elem: Contents) {
+    function setEditValues(elem: TContents) {
         setValue("name", elem.name);
         setValue("title", elem.title);
         setValue("content", (elem.content || ""));
     }
 
     function clearValues() {
-        /*        setValue("name", "");
-                setValue("title", "");
-                setValue("content", "");*/
-
         resetField("name");
         resetField("title");
         resetField("content");
     }
 
 
-    const {
-        isLoading,
-        isError,
-        data,
-        error,
-        refetch,
-    }: { isLoading: boolean, isError: any, data: any, error: any, refetch: any} = useQuery({
-        queryKey: ['pages'],
-        queryFn: getContents,
-        retry: 0,
-        /*        onError: (error) =>
-                    toast.error(`Something went wrong!`),*/
-    })
+    const contentsData = useQuery({
+            queryKey: ['pages'],
+            queryFn: getContentsData,
+            enabled: !!session && session.status === "authenticated",
+            retry: 0
+        }
+    )
 
-
-/*    if (isFetching) {*/
-    if (isLoading) {
+    /*        || (contentsData.isFetched && contentsData.isFetching && session.status === "authenticated")*/
+    if (session.status === "loading" || (session.status === "authenticated" && contentsData.isLoading)) {
         return (<Spinner/>);
+
+    } else if (session.status === "unauthenticated") {
+        return (
+            <MainContainer errorMessage={"Not Authorized to view this page!"}/>
+        );
     }
 
 
-    const data_t = data as IContents;
+    const data_c: { pages?: TContents[], error?: any } = {
+        pages: !contentsData.error ? (contentsData.data as IContents).pages : [],
+        error: contentsData.error
+    }
+
 
     return (
-/*        <Suspense fallback={<Spinner/>}>*/
-            <>
-                <MainContainer errorMessage={isError ? error.message : undefined}>
-                    <CustomTable
-                        open={{
-                            modalData: {...modalOpen},
-                            /*                        handlers: {
-                                                        add: (elem: any) => handlePageSubmit(elem),
-                                                        edit: (elem: any) => handlePageEdit(elem),
-                                                        cancel: handleModalClose
-                                                    }*/
-                        }}
-                        headers={["name", "title", "author", "created"]}
-                        data={data_t?.pages || []}
-                        actions={getTableActions()}>
+        /*        <Suspense fallback={<Spinner/>}>*/
+        <>
+            <MainContainer errorMessage={data_c?.error ? data_c.error.message : undefined}
+            >
+                <CustomTable
+                    open={{
+                        modalData: {...modalOpen},
+                        /*                        handlers: {
+                                                    add: (elem: any) => handlePageSubmit(elem),
+                                                    edit: (elem: any) => handlePageEdit(elem),
+                                                    cancel: handleModalClose
+                                                }*/
+                    }}
+                    headers={["name", "title", "author", "created"]}
+                    data={data_c ? data_c?.pages : undefined}
+                    actions={getTableActions()}>
 
 
-                        <CustomForm onSubmit={handleSubmit(modalOpen.type === "add" ? handlePageAdd : handlePageEdit)}>
-                            <>
-                                <div className={"flex flex-col mb-3"}>
-                                    <label htmlFor={"name"}
-                                           className={`${errors.name ? "text-red-600" : ""}`}>Name*</label>
-                                    <input {...register("name", {required: true})}
-                                           className={`p-1 text-lg border ${errors.name ? "border-red-600" : ""}`}/>
-                                </div>
-
-                                <div className={"flex flex-col mb-5"}>
-                                    <label htmlFor={"title"}
-                                           className={`${errors.title ? "text-red-600" : ""}`}>Title*</label>
-                                    <input {...register("title", {required: true})}
-                                           className={`p-1 text-lg border ${errors.title ? "border-red-600" : ""}`}/>
-                                </div>
-
-                                <QuillEditor control={control} name={"content"} rules={{required: false}}/>
-
-                                <div className={"flex justify-between flex-wrap"} style={{marginTop: 87}}>
-                                    <button
-                                        className={"flex-1 h-10 m-2 rounded bg-slate-300 hover:bg-slate-800 text-white px-3"}
-                                        onClick={() => handleModalClose()} style={{width: 70}}>
-                                        Cancel
-                                    </button>
-                                    <button
-                                        type={"submit"}
-                                        className={"flex-1 h-10 m-2 rounded bg-blue-600 hover:bg-blue-800 text-white px-3"}
-                                        style={{width: 70}}>
-                                        Save
-                                    </button>
-                                </div>
-                            </>
-                        </CustomForm>
-
-                    </CustomTable>
-                </MainContainer>
-
-                {(modalOpen.type === "delete") ? (
-                    <CustomModal title={"Delete"} onSubmit={handlePageDelete} onClose={handleModalClose}>
+                    <CustomForm onSubmit={handleSubmit(modalOpen.type === "add" ? handlePageAdd : handlePageEdit)}>
                         <>
-                            <>Are you sure you want to delete the selected page?</>
-                            <ul className={"text-left pl-2"}>
-                                <li title={"name"}><label className={"pr-4 font-bold"}>name:</label>
-                                    <label>{modalOpen?.data?.name}</label></li>
-                                <li title={"title"}><label className={"pr-4 font-bold"}>title: </label>
-                                    <label>{modalOpen?.data?.title}</label></li>
-                            </ul>
-                        </>
-                    </CustomModal>
+                            <div className={"flex flex-col mb-3"}>
+                                <label htmlFor={"name"}
+                                       className={`${errors.name ? "text-red-600" : ""}`}>Name*</label>
+                                <input {...register("name", {required: true})}
+                                       className={`p-1 text-lg border ${errors.name ? "border-red-600" : ""}`}/>
+                            </div>
 
-                ) : null}
-            </>
+                            <div className={"flex flex-col mb-5"}>
+                                <label htmlFor={"title"}
+                                       className={`${errors.title ? "text-red-600" : ""}`}>Title*</label>
+                                <input {...register("title", {required: true})}
+                                       className={`p-1 text-lg border ${errors.title ? "border-red-600" : ""}`}/>
+                            </div>
+
+                            <QuillEditor control={control} name={"content"} rules={{required: false}}/>
+
+                            <div className={"flex justify-between flex-wrap"} style={{marginTop: 87}}>
+                                <button
+                                    className={"flex-1 h-10 m-2 rounded bg-slate-300 hover:bg-slate-800 text-white px-3"}
+                                    onClick={() => handleModalClose()} style={{width: 70}}>
+                                    Cancel
+                                </button>
+                                <button
+                                    type={"submit"}
+                                    className={"flex-1 h-10 m-2 rounded bg-blue-600 hover:bg-blue-800 text-white px-3"}
+                                    style={{width: 70}}>
+                                    Save
+                                </button>
+                            </div>
+                        </>
+                    </CustomForm>
+
+                </CustomTable>
+            </MainContainer>
+
+            {(modalOpen.type === "delete") ? (
+                <CustomModal title={"Delete"} onSubmit={handlePageDelete} onClose={handleModalClose}>
+                    <>
+                        <>Are you sure you want to delete the selected page?</>
+                        <ul className={"text-left pl-2"}>
+                            <li title={"name"}><label className={"pr-4 font-bold"}>name:</label>
+                                <label>{modalOpen?.data?.name}</label></li>
+                            <li title={"title"}><label className={"pr-4 font-bold"}>title: </label>
+                                <label>{modalOpen?.data?.title}</label></li>
+                        </ul>
+                    </>
+                </CustomModal>
+
+            ) : null}
+        </>
         /*        </Suspense>*/
     )
 }
