@@ -5,6 +5,9 @@ export type TContents = {
     content: string | null
     authorId: string
     createdAt: Date
+    author?: {
+        name: string
+    }
 }
 
 export type TMenu = {

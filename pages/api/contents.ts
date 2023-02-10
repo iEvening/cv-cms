@@ -43,7 +43,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
 
     async function handleFetchData() {
         const {name} = req.query;
-        let query: any = !name ? {where: {NOT: {OR: [{name: "manager"}, {name: "todo"}]}}} : undefined;
+        let query: any = !name ? {
+            where: {NOT: {OR: [{name: "manager"}, {name: "todo"}]}},
+            include: {
+                author: {
+                    select: {
+                        name: true,
+                    }
+                }
+            }
+        } : undefined;
 
         if (name) {
             if (name === "manager") {
