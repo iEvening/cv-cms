@@ -63,7 +63,7 @@ export default function Menu() {
                 <div className="max-w-8xl mx-auto">
                     <div className="py-4 lg:px-8 lg:border-0 mx-4 lg:mx-0 flex justify-between" style={{minHeight: 72}}>
 
-                        {(isInitialLoading)
+                        {session.status === "loading" || (session.status === "authenticated" && isLoading)
                             ? (<SmallSpinner/>)
                             : (
                                 <>
@@ -139,7 +139,6 @@ export default function Menu() {
                     </div>
                 </div>
             </div>
-            {/*{modalOpen ? (<ModalLogin handleClose={() => handleLoginModalClose}/>) : null}*/}
         </>
     )
 }

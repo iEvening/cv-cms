@@ -7,11 +7,14 @@ import MainContainer from "@/components/MainContainer";
 import load from "@/lib/load";
 import React, {createElement} from "react";
 import parse from 'html-react-parser';
+import {useSession} from "next-auth/react";
 
 export default function Page({params, searchParams}: {
     params: { name: string };
     searchParams?: { [key: string]: string | string[] | undefined };
 }) {
+
+    const session = useSession();
 
     const getContentPage = async () => {
         return await load({url: `/api/contents?name=${params.name}`, options: {method: "GET"}});
@@ -33,7 +36,7 @@ export default function Page({params, searchParams}: {
     })
 
 
-    if (isLoading) {
+    if (session.status === "loading" || (session.status === "authenticated" && isLoading)) {
         return (<Spinner/>);
     }
 
