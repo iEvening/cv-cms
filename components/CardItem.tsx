@@ -29,7 +29,7 @@ export default function CardItem(
                             className="block mt-1 text-lg leading-tight font-medium text-black">
                             {short}
                         </div>
-                        <p className="mt-2 text-slate-500">{text}</p>
+                        <div className="mt-2 text-slate-500">{text}</div>
                     </div>
                 </div>
             </div>

@@ -135,9 +135,6 @@ export default function Home() {
                                 className="relative text-white">Tech Stack</span></span> used for the Web App
                             </blockquote>
                         </div>
-                        <p className="mt-2 text-lg text-slate-700">
-
-                        </p>
                     </header>
                     <div className="max-w-2xl mx-auto ">
 

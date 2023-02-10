@@ -7,7 +7,7 @@ export default function CustomFooter() {
                 <div
                     className="pt-4 pb-4 border-t border-slate-100 flex justify-between text-slate-400 pl-4 pr-4">
                     <div className="mr-2 text-zinc-50 font-bold  hover:text-slate-600">
-                        <p>Copyright © 2023</p>
+                        Copyright © 2023
                     </div>
                     <div className="text-zinc-50 font-bold hover:text-slate-600">
                         by Adam

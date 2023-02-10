@@ -103,7 +103,7 @@ export default function Menu() {
                                         </nav>
                                     </div>
 
-                                    <div className="relative flex items-center">
+                                    <div className="relative flex items-center px-4">
                                         <div className="relative lg:flex items-center">
                                             <nav
                                                 className="text-sm leading-6 font-semi-bold text-slate-100">
@@ -111,7 +111,10 @@ export default function Menu() {
 
                                                 {session.status === "authenticated" ? (
                                                     <div className={"flex flex-wrap"}>
-                                                        <p className="text-slate-200 self-center pr-4 pl-4 text-xl font-medium cursor-pointer hover:text-emerald-400 active:text-emerald-800">{session?.data?.user?.name}</p>
+                                                        <div
+                                                            className="text-slate-200 self-center pr-4 pl-4 text-xl font-medium cursor-pointer hover:text-emerald-400 active:text-emerald-800">
+                                                            {session?.data?.user?.name}
+                                                        </div>
                                                         <button type="button"
                                                                 className="text-white bg-red-500 hover:bg-red-800 font-medium rounded-full text-sm px-5 py-2.5 mr-2"
                                                                 onClick={() => signOut()}>
