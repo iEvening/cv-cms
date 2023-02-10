@@ -31,7 +31,11 @@ export default function ContentsPage() {
         resetField,
         formState: {errors},
         control
-    } = useForm<TContentForm>();
+    } = useForm<TContentForm>({
+        defaultValues: {
+            content: '',
+        }
+    });
 
     const handlePageAdd = async (elem: any) => {
         if ((!!elem?.name?.length) && (!!elem?.title?.length) && (typeof elem?.content === "string")) {
@@ -94,6 +98,23 @@ export default function ContentsPage() {
 
     const getContentsData = async () => {
         return await load({url: '/api/contents', options: {method: "GET"}});
+    }
+
+    function getFormattedTableData(data_?: TContents[]) {
+        let formattedData;
+
+        formattedData = data_?.map((elem) => {
+            return {
+                id: elem.id,
+                name: elem.name,
+                title: elem.title,
+                author: elem.author?.name,
+                created: new Date(elem.createdAt).toDateString(),
+                content: elem.content
+            }
+        })
+
+        return formattedData;
     }
 
 
@@ -178,7 +199,7 @@ export default function ContentsPage() {
                                                 }*/
                     }}
                     headers={["name", "title", "author", "created"]}
-                    data={data_c ? data_c?.pages : undefined}
+                    data={getFormattedTableData(data_c?.pages)}
                     actions={getTableActions()}>
 
 
