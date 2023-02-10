@@ -185,7 +185,6 @@ export default function ContentsPage() {
 
 
     return (
-        /*        <Suspense fallback={<Spinner/>}>*/
         <>
             <MainContainer errorMessage={data_c?.error ? data_c.error.message : undefined}
             >
