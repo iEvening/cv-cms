@@ -13,7 +13,7 @@ export default function MainContainer({children, errorMessage}: { children?: JSX
         <>
             <Menu/>
 
-            <div className="max-w-1xl mx-auto px-4 grid" style={{
+            <div className="max-w-1xl mx-auto px-3 grid" style={{
                 minHeight: "calc(100vh - 146px)"
             }}>
 
