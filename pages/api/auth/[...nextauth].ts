@@ -24,7 +24,7 @@ export const authOptions: NextAuthOptions = {
                 };
 
                 if (!username || !password) {
-                    throw new Error("Missing username or password");
+                    throw new Error("Missing username or password!");
                 }
 
                 const user = await prisma.user.findUnique({
@@ -32,8 +32,18 @@ export const authOptions: NextAuthOptions = {
                 });
 
                 if (!user || !(await compare(password, user.password))) {
-                    throw new Error("Invalid username or password");
+                    throw new Error("Invalid username or password!");
                 }
+
+                await prisma.user.update({
+                    where: {
+                        id: user.id
+                    },
+                    data: {
+                        updatedAt: new Date(),
+                    }
+                });
+
 
                 return {...user, name: user.name, email: user.id, image: user.role.toString()};
 
