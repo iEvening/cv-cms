@@ -28,10 +28,10 @@ export const authOptions: NextAuthOptions = {
                 }
 
                 const user = await prisma.user.findUnique({
-                    where: {username}
+                    where: {username: username.trim()}
                 });
 
-                if (!user || !(await compare(password, user.password))) {
+                if (!user || !(await compare(password.trim(), user.password))) {
                     throw new Error("Invalid username or password!");
                 }
 
