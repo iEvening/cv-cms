@@ -42,9 +42,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     }
 
     async function handleFetchData() {
+        const session = await getServerSession(req, res, authOptions);
         const {name} = req.query;
+
         let query: any = !name ? {
-            where: {NOT: {OR: [{name: "manager"}, {name: "todo"}]}},
+            where: {NOT: {OR: [{name: "manager"}, (parseInt(session?.user?.image || "0") > 3) ? {} : {name: "todo"}]}},
             include: {
                 author: {
                     select: {
@@ -62,7 +64,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
             }
         }
 
-        const session = await getServerSession(req, res, authOptions);
 
         if (session) {
             const contents = await prisma.contents.findMany(query);
