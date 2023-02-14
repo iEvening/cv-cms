@@ -108,7 +108,7 @@ export default function ContentsPage() {
                 id: elem.id,
                 name: elem.name,
                 title: elem.title,
-                author: elem.author?.name,
+                author: elem?.author?.name,
                 created: new Date(elem.createdAt).toDateString(),
                 content: elem.content
             }
